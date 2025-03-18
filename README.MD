@@ -32,3 +32,14 @@ Error: presentation error: server identity error caused by: server identity proo
     at Presentation.verify (/Users/soms/ZKON Research/tlsn-ts-verifier/wasm/pkg/tlsn_wasm.js:446:26)
     at main (/Users/soms/ZKON Research/tlsn-ts-verifier/src/index.ts:54:39)
 ```
+
+Reply from TLSN Team:
+
+```log
+The WASM API currently does not support updating its certificate store. It uses Mozilla root certificates by default. The examples use a test server with a self-signed certificate, so it won't work when testing with the WASM build.
+```
+
+# WIP: Neon project to verify a presentation.
+
+# Experiments how the Attestation/Presentation signature can be verified.
+
