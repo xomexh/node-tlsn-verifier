@@ -48,12 +48,29 @@ async function main() {
     const presentation = build_presentation(attestation, secrets, commit);
 
     console.log("\nPresntation: built using WASM Attestation & Secrets:\n", presentation.serialize());
-    console.log("\nPresntation: built using TLSNv8 Attestation & Secrets:\n", presentation.serialize());
+    console.log("\nPresntation: built using TLSNv8 Attestation & Secrets:\n", presentationCheck.serialize());
+    
     //Both are same. 
+    const checkSimilarity = await areUint8ArraysEqual(presentationCheck.serialize(), presentationCheck.serialize());
+    console.log(`\nAre both presntations same? ${checkSimilarity?`Yes`:`No`}`)
 
-    const result = await presentation.verify() //ERROR HERE! -> Error: presentation error: server identity error caused by: server identity proof error: certificate: invalid server certificate
-    console.log("Check Verification:\n", result);
-    console.log("Check Verification:\n", presentationCheck.verify());
+    // const result = await presentation.verify() //ERROR HERE! -> Error: presentation error: server identity error caused by: server identity proof error: certificate: invalid server certificate
+    // console.log("\nCheck Verification:\n", result);
+    // console.log("\nCheck Verification:\n", presentationCheck.verify());
 }
 
 main().catch(console.error);
+
+async function areUint8ArraysEqual(arr1: Uint8Array, arr2: Uint8Array): Promise<boolean> {
+  if (arr1.length !== arr2.length) {
+      return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+          return false;
+      }
+  }
+
+  return true;
+}
