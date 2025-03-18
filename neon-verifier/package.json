@@ -1,0 +1,22 @@
+{
+  "name": "neon-verifier",
+  "version": "0.0.1",
+  "description": "TLSN v8 presentation verification on Node.",
+  "main": "index.node",
+  "scripts": {
+    "test": "cargo test",
+    "cargo-build": "cargo build --message-format=json-render-diagnostics > cargo.log",
+    "yolo":"cargo-cp-artifact -nc index.node -- cargo build --message-format=json-render-diagnostics",
+    "cross-build": "cross build --message-format=json-render-diagnostics > cross.log",
+    "postcargo-build": "neon build",
+    "postcross-build": "neon dist -m /target < cross.log",
+    "debug": "npm run cargo-build --",
+    "build": "npm run cargo-build -- --release",
+    "cross": "npm run cross-build -- --release"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@neon-rs/cli": "0.1.82"
+  }
+}
