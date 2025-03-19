@@ -69,7 +69,7 @@ async function main() {
     // console.log(Buffer.from(presentation.serialize()).toString("base64"));
     const check = neonVerifier.verifyPresentation(Buffer.from(presentation.serialize()).toString("base64"))
     // const check = neonVerifier.verifyPresentation(Buffer.from(new Uint8Array([1, 3, 5])).toString("base64")) -> Check how exception is handled.
-    console.log(check);
+    console.log(check['result']);
 
     // const result = await presentation.verify() //ERROR HERE! -> Error: presentation error: server identity error caused by: server identity proof error: certificate: invalid server certificate
     // console.log("\nCheck Verification:\n", result);
@@ -210,7 +210,7 @@ async function experiments(){
     console.log(`ECDSA Signature valid? ${result?`Yes`:`No`}`);
 }
 
-main().catch(console.error);
+//main().catch(console.error);
 experiments()
 
 async function areUint8ArraysEqual(arr1: Uint8Array, arr2: Uint8Array): Promise<boolean> {

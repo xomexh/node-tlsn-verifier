@@ -12,7 +12,7 @@ use bincode;
 use hex;     
 use chrono::DateTime;
 
-fn verify_presentation(mut cx: FunctionContext) -> JsResult<JsString> {
+fn verify_presentation(mut cx: FunctionContext) -> JsResult<JsObject> {
     let encoded_presentation = cx.argument::<JsString>(0)?.value(&mut cx);
 
     // Convert Base64 string back to bytes
@@ -31,7 +31,7 @@ fn verify_presentation(mut cx: FunctionContext) -> JsResult<JsString> {
     let VerifyingKey { alg, data: key_data } = presentation.verifying_key();
 
     println!(
-        "Verifying presentation with {alg} key: {}\n\n**Ask yourself, do you trust this key?**\n",
+        "\nVerifying presentation with {alg} key: {}\n",
         hex::encode(key_data)
     );
 
@@ -53,12 +53,24 @@ fn verify_presentation(mut cx: FunctionContext) -> JsResult<JsString> {
     let sent = String::from_utf8_lossy(partial_transcript.sent_unsafe());
     let recv = String::from_utf8_lossy(partial_transcript.received_unsafe());
 
+    let obj: Handle<JsObject> = cx.empty_object();
+    let sentStr = cx.string(&sent);
+    let recvStr = cx.string(&recv);
+    let sessionTime = cx.number(connection_info.time as f64);
+
+    obj.set(&mut cx, "sent", sentStr)?;
+    obj.set(&mut cx, "recv", recvStr)?;
+    obj.set(&mut cx, "time", sessionTime)?;
+
     let result = format!(
         "Verified session with {server_name} at {time}.\nData Sent:\n{}\nData Received:\n{}\n",
         sent, recv
     );
+    let js_result = cx.string(result);
+    obj.set(&mut cx, "result", js_result);
 
-    Ok(cx.string(result))
+    //Ok(cx.string(result))
+    Ok(obj)
 }
 
 #[neon::main]
